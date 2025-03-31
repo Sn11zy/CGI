@@ -30,10 +30,18 @@ public class FlightRepository {
                 .optional();
     }
 
-    List<Flight> findByOrigDest(String origin, String destination){
+    public List<Flight> findByOrigDest(String origin, String destination){
         return jdbcClient.sql("SELECT * FROM flights WHERE origin = :origin AND destination= :destination;")
                 .param("origin",origin)
                 .param("destination",destination)
+                .query(Flight.class)
+                .list();
+    }
+
+    public List<Flight> findByDates(LocalDateTime from, LocalDateTime till){
+        return jdbcClient.sql("SELECT * FROM flights WHERE departure < :till AND departure > :from;")
+                .param("till",till)
+                .param("from", from)
                 .query(Flight.class)
                 .list();
     }
