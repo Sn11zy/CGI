@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +36,18 @@ public class FlightRepository {
                 .param("destination",destination)
                 .query(Flight.class)
                 .list();
+    }
+
+    @PostConstruct
+    public void init(){
+        jdbcClient.sql("INSERT INTO flights(origin,destination,departure,seats) VALUES('Tallinn', 'Helsinki', :departure, 10);")
+                .param("departure",LocalDateTime.now().plus(3, ChronoUnit.HOURS))
+                .update();
+        jdbcClient.sql("INSERT INTO flights(origin,destination,departure,seats) VALUES('Tallinn', 'Helsinki', :departure, 10);")
+                .param("departure",LocalDateTime.now().plus(2, ChronoUnit.HOURS))
+                .update();
+        jdbcClient.sql("INSERT INTO flights(origin,destination,departure,seats) VALUES('Tallinn', 'Stockholm', :departure, 10);")
+                .param("departure",LocalDateTime.now().plus(5, ChronoUnit.HOURS))
+                .update();
     }
 }

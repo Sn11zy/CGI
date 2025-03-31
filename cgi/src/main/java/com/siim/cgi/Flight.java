@@ -1,6 +1,7 @@
 package com.siim.cgi;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "flights")
 public class Flight{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String origin;
     private String destination;
@@ -43,5 +44,16 @@ public class Flight{
 
     public Integer getSeats() {
         return seats;
+    }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "id=" + id +
+                ", origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", departure=" + departure +
+                ", seats=" + seats +
+                '}';
     }
 }
