@@ -1,6 +1,7 @@
 package com.siim.cgi;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,44 +12,30 @@ import java.util.Optional;
 
 @Repository
 public class FlightRepository {
-    private List<Flight> flights = new ArrayList<>();
+    private final JdbcClient jdbcClient;
 
-    List<Flight> findall(){
-        return flights;
+    public FlightRepository(JdbcClient jdbcClient){
+        this.jdbcClient = jdbcClient;
     }
 
-    Optional<Flight> findById(Integer id){
-        return flights.stream()
-                .filter(flight -> flight.id() == id)
-                .findFirst();
+    public List<Flight> findall(){
+        return jdbcClient.sql("SELECT * FROM flights;")
+                .query(Flight.class)
+                .list();
+    }
+
+    public Optional<Flight> findById(Integer id){
+        return jdbcClient.sql("SELECT * FROM flights WHERE id = :id;")
+                .param("id",id)
+                .query(Flight.class)
+                .optional();
     }
 
     List<Flight> findByOrigDest(String origin, String destination){
-        return flights.stream()
-                .filter(flight -> flight.origin().equals(origin)&&flight.destination().equals(destination))
-                .toList();
-    }
-
-    @PostConstruct
-    private void init(){
-        flights.add(new Flight(
-                0,
-                "Tallinn",
-                "Helsinki",
-                LocalDateTime.now(),
-                10));
-
-        flights.add(new Flight(
-                1,
-                "Tallinn",
-                "Stockholm",
-                LocalDateTime.now().plus(3, ChronoUnit.HOURS),
-                40));
-        flights.add(new Flight(
-                2,
-                "Tallinn",
-                "Helsinki",
-                LocalDateTime.now().plus(2,ChronoUnit.HOURS),
-                50));
+        return jdbcClient.sql("SELECT * FROM flights WHERE origin = :origin AND destination= :destination;")
+                .param("origin",origin)
+                .param("destination",destination)
+                .query(Flight.class)
+                .list();
     }
 }
