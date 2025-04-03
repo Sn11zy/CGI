@@ -19,25 +19,38 @@
     <h1 class="text-center my-4" th:text="'Flight from ' + ${flight.origin} + ' To ' + ${flight.destination}"></h1>
 </div>
 <div id="container"></div>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.min.js"></script>
-<script>
-    var element = document.getElementById('container');
-    var options = {
-      map: {
-        rows: 10,
-        columns: 6,
-        seatTypes: {
-          default: {
-            label: 'Economy',
-            cssClass: 'economy',
-            price: 10,
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/seatchart@0.1.0/dist/seatchart.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        var takenSeats = [[${takenSeats}]];
+        var reserved = []
+        var element = document.getElementById('container');
+        for (i = 0; i < takenSeats.length; i++) {
+            var seat = {
+                row: takenSeats[i].seaty-1,
+                col: takenSeats[i].seatx-1,
+            }
+            reserved.push(seat);
+        }
+        console.log(reserved)
+        var options = {
+          map: {
+            reservedSeats: reserved,
+            columnSpacers: [2],
+            rows: 5,
+            columns: 4,
+            seatTypes: {
+              default: {
+                label: 'Economy',
+                cssClass: 'economy',
+                price: 10,
+              },
+            },
           },
-        },
-      },
-    };
+        };
 
-    var sc = new Seatchart(element, options);
+        var sc = new Seatchart(element, options);
+    /*]]>*/
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

@@ -6,12 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
-public class flightsController {
+public class FlightsController {
 
     @Autowired
     private FlightRepository repo;
@@ -34,15 +33,15 @@ public class flightsController {
         return "index";
     }
 
-    @GetMapping("{id}")
-    public String flightInfo(Model model, @PathVariable Integer id){
-        Optional<Flight> flightOptional = repo.findById(id);
-        if (flightOptional.isEmpty()){
-            return "/error";
-        }
-        model.addAttribute("flight", flightOptional.get());
-        return "flight";
-    }
+//    @GetMapping("{id}")
+//    public String flightInfo(Model model, @PathVariable Integer id){
+//        Optional<Flight> flightOptional = repo.findById(id);
+//        if (flightOptional.isEmpty()){
+//            return "/error";
+//        }
+//        model.addAttribute("flight", flightOptional.get());
+//        return "flight";
+//    }
 
 
 
